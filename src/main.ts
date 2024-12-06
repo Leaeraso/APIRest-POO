@@ -1,9 +1,8 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
-import { UserRouter } from './router/user.router';
+import { UserRouter } from './user/user.router';
 import { Configuration } from './config/config';
-import { DataSource } from 'typeorm';
 
 class Main extends Configuration{
     public app: express.Application = express();
@@ -25,20 +24,6 @@ class Main extends Configuration{
 
     public routers(): Array<express.Router> {
         return [new UserRouter().router];
-    }
-
-    
-    async dbConnect(): Promise<DataSource> {
-        const dataSource = new DataSource(this.typeORMCOnfig);
-
-        try {
-            await dataSource.initialize();
-            console.log('Database connection established.');
-            return dataSource;
-        } catch (error) {
-            console.error('Error during dataSource initiazation', error);
-            throw error;
-        }
     }
 
     public listen() {
