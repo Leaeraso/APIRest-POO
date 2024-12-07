@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export abstract class Configuration {
+
     constructor(){
         const nodeNameEnv = this.createPathEnv(this.nodeEnv)
         dotenv.config({
@@ -41,11 +42,14 @@ export abstract class Configuration {
             username: this.getEnviroment('DB_USER'),
             password: this.getEnviroment('DB_PASSWORD'),
             database: this.getEnviroment('DB_DATABASE'),
-            entities: [__dirname + "/../**/*.entity{.ts,.js}"],
-            migrations: [__dirname + "/../../migrations/*{.ts,.js}"],
+            entities: [__dirname + "/../**/*.entity.ts}"],
+            migrations: [__dirname + "/../../migrations/*.ts"],
             synchronize: true,
             logging: false,
-            namingStrategy: new SnakeNamingStrategy()
+            namingStrategy: new SnakeNamingStrategy(),
+            extra: {
+                connectionLimit: 10,
+            },
         }
     }
 

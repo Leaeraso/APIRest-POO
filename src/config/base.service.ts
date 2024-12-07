@@ -1,16 +1,17 @@
-import { EntityTarget, Repository, DataSource } from "typeorm";
+import { EntityTarget, Repository } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { Configuration } from "./config";
 
 export class BaseService<T extends BaseEntity> extends Configuration {
     public execRepository: Promise<Repository<T>>;
 
-    constructor(private getEntity: EntityTarget<T>, private dataSource: DataSource) {
+    constructor(private getEntity: EntityTarget<T>) {
         super();
-        this.execRepository = this.initRepository(getEntity);
+        this.execRepository = this.initRepository(this.getEntity);
     }
 
     async initRepository(entity: EntityTarget<T>): Promise<Repository<T>> {
-        return this.dataSource.getRepository(entity);
+        const getConn = await this.dbConnect()
+        return getConn.getRepository(entity)
     }
 }
